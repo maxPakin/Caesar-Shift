@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.489
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caesar Shift", "Caesar Shift\Caesar Shift.csproj", "{91013D4E-FD2A-4FBD-9AF9-8697639969FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caesar Shift.Tests", "Caesar Shift.Tests\Caesar Shift.Tests.csproj", "{CCEBED9C-5447-4B5A-A6A7-C3A6BDCBD6F1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{91013D4E-FD2A-4FBD-9AF9-8697639969FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91013D4E-FD2A-4FBD-9AF9-8697639969FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91013D4E-FD2A-4FBD-9AF9-8697639969FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91013D4E-FD2A-4FBD-9AF9-8697639969FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCEBED9C-5447-4B5A-A6A7-C3A6BDCBD6F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCEBED9C-5447-4B5A-A6A7-C3A6BDCBD6F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCEBED9C-5447-4B5A-A6A7-C3A6BDCBD6F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCEBED9C-5447-4B5A-A6A7-C3A6BDCBD6F1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {29D955E2-720F-4B5B-9261-9611E898FA53}
+	EndGlobalSection
+EndGlobal
