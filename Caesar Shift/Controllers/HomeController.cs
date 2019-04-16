@@ -1,32 +1,60 @@
 ﻿using Caesar_Shift.Business;
-using System;
+using Caesar_Shift.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using Xceed.Words.NET;
 
 namespace Caesar_Shift.Controllers
 {
     public class HomeController : Controller
     {
-        FileContext db = new FileContext();
         public ActionResult Index()
         {
-            db.Files.
             return View();
         }
 
         [HttpPost]
-        public string Upload(HttpPostedFileBase upload, string text, string action)
+        public ActionResult Upload(HttpPostedFileBase file, string text, string shift, string action)
         {
-            if (upload == null)
+            // Update page, if nothing is loaded
+            if (file == null && text.Length < 1)
+                return RedirectToAction("Index", "Home");
+
+            switch(action)
             {
-                if ()
+                case "Зашифровка": action = "Cryption"; break;
+                case "Расшифровка": action = "Decryption"; break;
+                case "Найти ключ": action = "KeySearch"; break;
             }
 
-            return action;
+            string fileName;
+
+            if (file != null)
+            {
+                fileName = file.FileName;
+                if (file.FileName.EndsWith(".txt"))
+                    text = TextExtracter.GetTextFromTxt(file.InputStream);
+                else
+                    text = TextExtracter.GetTextFromDocx(file.InputStream);
+            }
+            else
+            {
+                fileName = "Untiled.txt";
+            }
+
+
+
+            Response.Cookies.Clear();
+
+            var cookie = new HttpCookie("FileID", );
+            Response.Cookies.Add(cookie);
+            return RedirectToAction(action, "Crypt");
         }
+
+
+
 
         public ActionResult About()
         {
