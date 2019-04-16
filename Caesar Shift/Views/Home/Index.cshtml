@@ -3,19 +3,38 @@
 }
 
 <div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    <h2>Шифр Цезаря</h2>
+    <h4>Калькулятор шифрует входной текст на русском языке при помощи шифра Цезаря. Неалфавитные символы (пробелы, знаки препинания, цифры) — не преобразуются.</h4>
 </div>
 
 @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new {enctype="multipart/form-data"}))
-{
-    <div>
-        <input type="text" name="textInput" class="form-control" placeholder="Шифр Цезаря может расшифровать только наш сайт"/>
-        <input type="file" name="upload"/>
+{   
+
+    <div class="row">
+        <div class="col-md-6">
+            <textarea name="text" class="span6" rows="5" placeholder="Привет, мир!"></textarea>
+        </div>
+        <div class="col-md-6">
+            <input type="file" name="file"/>
+        </div>
+                
     </div>
-    <input type="submit" name="action" value="Зашифровка"/>
-    <input type="submit" name="action" value="Расшифровка"/>
-    <input type="submit" name="action" value="Найти ключ"/>
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-md-4 border" style="padding: 20px;">
+                    <label for="r1">Ключ:</label><br>
+                    <input type="range" id="r1" min="-32" value="0" max="32" step="1" name="shift"/><br>
+                    <input type="submit" name="action" value="Зашифровка" class="btn btn-primary btn-lg"/>
+            </div>
+            <div class="col-md-4">
+                <label for="r2">Ключ:</label><br>
+                <input type="range" id="r1" min="-32" value="0" max="32" step="1" name="shift"/><br>
+                <input type="submit" name="action" value="Расшифровка" class="btn btn-primary btn-lg"/>
+            </div>
+            <div class="col-md-4">
+                <input type="submit" name="action" value="Найти ключ" class="btn btn-primary btn-lg"/>
+            </div>
+        </div>
+    </div>
 }
 
