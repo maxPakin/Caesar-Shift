@@ -3,11 +3,19 @@
     ViewBag.Title = "Зашифровка";
 }
 
-<h2>@ViewBag.Title</h2>
-<h3>Текст был зашифрован с ключом <strong>@ViewBag.Key</strong></h3>
-<div class="border">
-    <h5>@ViewBag.Text</h5>
+
+<div class="container shadow-card" style="padding: 20px 30px;">
+    <h2>Результаты зашифровки</h2><hr/>
+    <h4>Текст был зашифрован с ключом <strong>@ViewBag.Key</strong></h4>
+    <div class="border p-2 mb-3 bg-white">
+        <h5>@ViewBag.Text</h5>
+    </div>
+    <h3 class="pb-2">Вы можете скачать результат:</h3>
+    @using (Html.BeginForm("Download", "Crypt", FormMethod.Post))
+    {
+        <input name="key" type="hidden" value="@ViewBag.Key">
+        <button class="btn btn-success btn-lg" type="submit">Скачать</button>
+    }
 </div>
-<h3>Вы можете скачать результат:</h3>
-<button value="Скачать"/>
+
 

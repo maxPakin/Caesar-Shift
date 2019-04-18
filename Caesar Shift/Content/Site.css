@@ -126,3 +126,49 @@ input[type=range]:focus {
 .file input:focus ~ .file-custom {
   box-shadow: 0 0 0 .075rem #fff, 0 0 0 .2rem #0074d9;
 }
+
+.row-flex {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.f-block {
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 15px 0px 0px 15px;
+    border-right-width: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: darkgray;
+    color: white;
+}
+
+.m-block {
+    padding: 10px;
+    background-color: white;
+}
+
+.l-block {
+    padding: 10px;
+    border-radius: 0px 15px 15px 0px;
+    border-left-width: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: darkgray;
+}
+
+@media (max-width: 768px){
+    .f-block {
+        border-radius: 15px 15px 0px 0px;
+        border-right-width: 1px;
+        border-bottom-width: 0px;
+    }
+
+    .l-block {
+        border-radius: 0px 0px 15px 15px;
+        border-left-width: 1px;
+        border-top-width: 0px;
+    }
+}
