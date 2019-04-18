@@ -2,37 +2,65 @@
     ViewBag.Title = "Главная";
 }
 
-<div class="jumbotron">
-    <h2>Шифр Цезаря</h2>
-    <h4>Калькулятор шифрует входной текст на русском языке при помощи шифра Цезаря. Неалфавитные символы (пробелы, знаки препинания, цифры) — не преобразуются.</h4>
-</div>
 
-@using (Html.BeginForm("Upload", "Home", FormMethod.Post, new {enctype="multipart/form-data"}))
-{   
-
-    <div class="row">
-        <div class="col-md-6">
-            <textarea name="text" class="span6" rows="5" placeholder="Привет, мир!"></textarea>
-        </div>
-        <div class="col-md-6">
-            <input type="file" name="file"/>
-        </div>
-                
-    </div>
-    <div class="container">
+@using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="container shadow-card">
         <div class="row justify-content-center text-center">
-            <div class="col-md-4 border" style="padding: 20px;">
-                    <label for="r1">Ключ:</label><br>
-                    <input type="range" id="r1" min="-32" value="0" max="32" step="1" name="shift"/><br>
-                    <input type="submit" name="action" value="Зашифровка" class="btn btn-primary btn-lg"/>
+            <div class="col-md-4" style="min-width: 270px;">
+                    <img style="height: 350px;" src="~/Content/caesar.png"/>
             </div>
-            <div class="col-md-4">
-                <label for="r2">Ключ:</label><br>
-                <input type="range" id="r1" min="-32" value="0" max="32" step="1" name="shift"/><br>
-                <input type="submit" name="action" value="Расшифровка" class="btn btn-primary btn-lg"/>
+            <div class="col-md-8" style="padding-top: 30px;">
+                <h2>Шифр Цезаря</h2><hr/>
+                <h4>Калькулятор шифрует входной текст на русском языке при помощи шифра Цезаря. Неалфавитные символы (пробелы, знаки препинания, цифры) — не преобразуются.</h4>
             </div>
-            <div class="col-md-4">
-                <input type="submit" name="action" value="Найти ключ" class="btn btn-primary btn-lg"/>
+
+        </div>
+        <div class="row justify-content-center">
+            <textarea class="form-control" style="margin: 20px 15px 0px 15px;" name="text" placeholder="Ваш текст"></textarea>
+        </div>
+        <div class="row justify-content-center">
+            <label class="file" style="margin-top: 20px;">
+                <input type="file" id="file" name="file" aria-label="Обзор файлов...">
+                <span class="file-custom"></span>
+            </label>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row text-center">
+            <div class="col-lg-4">
+                <div class="container shadow-card d-flex flex-column">
+                    <div class="row justify-content-center">
+                        <span class="f-24 pr-1">Ключ:</span>
+                        <output class="f-24" id="range1Label">0</output>
+                    </div>
+                    <div class="row justify-content-center pr-3 pl-3">
+                        <span>-32</span>
+                        <input type="range" id="range1" min="-32" value="0" max="32" step="1" name="shift" oninput="range1Label.value = range1.value"/>
+                        <span>32</span>
+                    </div><br/>
+                    <input type="submit" name="action" value="Зашифровка" class="btn btn-primary btn-lg mt-auto"/>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="container shadow-card d-flex flex-column">
+                    <div class="row justify-content-center">
+                        <span class="f-24 pr-1">Ключ:</span>
+                        <output class="f-24" id="range2Label">0</output>
+                    </div>
+                    <div class="row justify-content-center pr-3 pl-3">
+                        <span>-32</span>
+                        <input type="range" id="range2" min="-32" value="0" max="32" step="1" name="shift2" oninput="range2Label.value = range2.value"/>
+                        <span>32</span>
+                    </div><br/>
+                    <input type="submit" name="action" value="Расшифровка" class="btn btn-primary btn-lg mt-auto"/>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="container shadow-card d-flex flex-column">
+                        <span class="f-24">Функция поиска ключа</span>
+                        <input type="submit" name="action" value="Найти ключ" class="btn btn-primary btn-lg mt-auto"/>
+                </div>
             </div>
         </div>
     </div>
