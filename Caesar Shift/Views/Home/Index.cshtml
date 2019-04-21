@@ -11,20 +11,19 @@
                     <img style="height: 350px;" src="~/Content/caesar.png"/>
             </div>
             <div class="col-md-8" style="padding-top: 30px;">
-                <h2>Шифр Цезаря</h2><hr/>
+                <h2>Шифр Цезаря</h2>
+                <hr/>
                 <h4>Калькулятор шифрует входной текст на русском языке при помощи шифра Цезаря. Неалфавитные символы (пробелы, знаки препинания, цифры) — не преобразуются.</h4>
+                <h4>В качестве файла принимаются лишь <strong>.txt</strong> и <strong>.docx</strong> файлы</h4>
             </div>
 
         </div>
-        <div class="row justify-content-center">
-            <textarea class="form-control" style="margin: 20px 15px 0px 15px;" name="text" placeholder="Ваш текст"></textarea>
+        <div class="container m-2 text-center">
+            <textarea name="text" placeholder="Ваш текст"></textarea>
+            <h3 class="text-with-lines"><span>или</span></h3>
+            <input type="file" name="file" class="text-center m-auto" accept="text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
         </div>
-        <div class="row justify-content-center">
-            <label class="file" style="margin-top: 20px;">
-                <input type="file" id="file" name="file" aria-label="Обзор файлов...">
-                <span class="file-custom"></span>
-            </label>
-        </div>
+        
     </div>
     <div class="container-fluid">
         <div class="row text-center">

@@ -7,15 +7,21 @@
     <h2>Результаты поиска</h2><hr/>
     <h4>Текст был проанализирован частотным анализом. Наиболее подходящим ключом оказалсья <strong>@ViewBag.Keys[0]</strong></h4>
     <div class="container">
-        <div class="row row-flex p-3">
+        <div class="row row-flex p-2">
             <div class="col-md-1 f-block bg-success">
                 @ViewBag.Keys[0]
             </div>
             <div class="col m-block">
-                @Caesar_Shift.Business.Caesar.Shift(ViewBag.Text, ViewBag.Keys[0])
+                <p>@Caesar_Shift.Business.Caesar.Shift(ViewBag.Text, -ViewBag.Keys[0])</p>
             </div>
             <div class="col-md-1 l-block bg-success">
-                <img src="~/Content/download-icon.svg" style="max-width: 100%; max-height: 30px;"/>
+                @using (Html.BeginForm("Download", "Crypt", FormMethod.Post))
+                {
+                    <input name="shift" type="hidden" value="@(-ViewBag.Keys[0])">
+                    <button type="submit" class="border-0 p-0 bg-transparent">
+                        <img src="~/Content/download-icon.svg" style="max-width: 100%; max-height: 30px;"/>
+                    </button>
+                }
             </div>
         </div>
     </div>
@@ -29,10 +35,16 @@
                     @ViewBag.Keys[i]
                 </div>
                 <div class="col m-block">
-                    @Caesar_Shift.Business.Caesar.Shift(ViewBag.Text, ViewBag.Keys[i])
+                    <p>@Caesar_Shift.Business.Caesar.Shift(ViewBag.Text, -ViewBag.Keys[i])</p>
                 </div>
                 <div class="col-md-1 l-block">
-                    <img src="~/Content/download-icon.svg" style="max-width: 100%; max-height: 30px;"/>
+                    @using (Html.BeginForm("Download", "Crypt", FormMethod.Post))
+                    {
+                        <input name="shift" type="hidden" value="@(-ViewBag.Keys[i])">
+                        <button type="submit" class="border-0 p-0 bg-transparent">
+                            <img src="~/Content/download-icon.svg" style="max-width: 100%; max-height: 30px;"/>
+                        </button>
+                    }
                 </div>
             </div>
         </div>

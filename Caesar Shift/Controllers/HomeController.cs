@@ -10,46 +10,59 @@ namespace Caesar_Shift.Controllers
 {
     public class HomeController : Controller
     {
+        FileContext db = new FileContext();
+
+        private string ButtonTextToAction(string action)
+        {
+            switch (action)
+            {
+                case "Зашифровка": return "Cryption"; 
+                case "Расшифровка": return "Decryption"; 
+                case "Найти ключ": return "KeySearch";
+            }
+            return "";
+        }
+
         public ActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult Upload(HttpPostedFileBase file, string text, string shift, string action)
+        public ActionResult Upload(HttpPostedFileBase file, string text, string cryptionKey, string decryptionKey, string action)
         {
-            // Update page, if nothing is loaded
             if (file == null && text.Length < 1)
                 return RedirectToAction("Index", "Home");
 
-            switch(action)
-            {
-                case "Зашифровка": action = "Cryption"; break;
-                case "Расшифровка": action = "Decryption"; break;
-                case "Найти ключ": action = "KeySearch"; break;
-            }
+            action = ButtonTextToAction(action);
+            string key = action == "Cryption" ? cryptionKey : decryptionKey;
+
 
             string fileName;
-
+            int id;
             if (file != null)
             {
                 fileName = file.FileName;
                 if (file.FileName.EndsWith(".txt"))
-                    text = TextExtracter.GetTextFromTxt(file.InputStream);
+                {
+                    text = TextService.GetTextFromTxt(file.InputStream);
+                }
                 else
-                    text = TextExtracter.GetTextFromDocx(file.InputStream);
+                    text = TextService.GetTextFromDocx(file.InputStream, this);
+                id = db.Add(file.FileName, text);
             }
             else
+                id = db.Add(text);
+
+            var cookie = new HttpCookie("FileID", id.ToString());
+            Response.Cookies.Add(cookie);
+
+            if (!"KeySearch".Equals(action))
             {
-                fileName = "Untiled.txt";
+                cookie = new HttpCookie("Key", key);
+                Response.Cookies.Add(cookie);
             }
 
-
-
-            Response.Cookies.Clear();
-
-            var cookie = new HttpCookie("FileID", );
-            Response.Cookies.Add(cookie);
             return RedirectToAction(action, "Crypt");
         }
 

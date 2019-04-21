@@ -10,6 +10,6 @@ namespace Caesar_Shift.Models
         public static CryptionData None = new CryptionData();
 
         public int Shift { get; set; }
-        public FileText File { get; set; }
+        public File File { get; set; }
     }
 }

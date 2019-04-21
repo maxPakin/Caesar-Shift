@@ -4,16 +4,12 @@
     background-color: #fff;
 }
 
-/* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
     max-width: 960px;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
 .dl-horizontal dt {
     white-space: normal;
 }
@@ -26,13 +22,25 @@ section {
   padding: 150px 0;
 }
 
-span{
+textarea {
+    width: 100%;
+}
+
+span, h1, h2, h3, h4, h5, h6, textarea, label, a{
     font-family: 'Century Gothic';
 }
 
 .f-24 {
     font-size: 27px;
 }
+
+.row-flex {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+
+/* Основа с тенью для всех страниц */
 
 .shadow-card {
     margin-top: 15px;
@@ -45,8 +53,69 @@ span{
 }
 
 
+/* Стиль для блоков с текстом в Поиске ключа */
+
+.f-block {
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 15px 0px 0px 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: darkgray;
+    color: white;
+}
+
+.m-block {
+    padding: 10px;
+    background-color: white;
+    white-space: pre-wrap;
+}
+
+.l-block {
+    padding: 10px;
+    border-radius: 0px 15px 15px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: darkgray;
+}
+
+@media (max-width: 768px){
+    .f-block {
+        border-radius: 15px 15px 0px 0px;
+    }
+
+    .l-block {
+        border-radius: 0px 0px 15px 15px;
+    }
+}
+
+/* Текст с линиями сбоку */
+
+.text-with-lines{
+  position:relative;
+  text-align: center
+}
+.text-with-lines:before {
+  content: "";
+  display: block;
+  border-top: solid 2px #bebebe;
+  width: 100%;
+  height: 2px;
+  position: absolute;
+  top: 50%;
+}
+.text-with-lines span {
+  background-color: #fafafa;
+  padding: 0 10px;
+  position: relative;
+}
+
+/* Слайдер */
+
 input[type=range] {
-  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  -webkit-appearance: none;
   height:5px;
   width: 80%;
   cursor: pointer;
@@ -63,112 +132,9 @@ input[type=range]::-webkit-slider-thumb {
   border-radius: 20px;
   background: #fff;
   cursor: pointer;
-  margin-top: 0px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+  margin-top: 0px; 
 }
 
 input[type=range]:focus {
   outline: none;
-}
-
-
-.file {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-  height: 2.5rem;
-}
-.file input {
-  min-width: 14rem;
-  margin: 0;
-  filter: alpha(opacity=0);
-  opacity: 0;
-}
-.file-custom {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  z-index: 5;
-  height: 2.5rem;
-  padding: .5rem 1rem;
-  line-height: 1.5;
-  color: #555;
-  background-color: #fff;
-  border: .075rem solid #ddd;
-  border-radius: .25rem;
-  box-shadow: inset 0 .2rem .4rem rgba(0,0,0,.05);
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-}
-.file-custom:after {
-  content: "Ваш файл...";
-}
-.file-custom:before {
-  position: absolute;
-  top: -.075rem;
-  right: -.075rem;
-  bottom: -.075rem;
-  z-index: 6;
-  display: block;
-  content: "Обзор";
-  height: 2.5rem;
-  padding: .5rem 1rem;
-  line-height: 1.5;
-  color: #555;
-  background-color: #eee;
-  border: .075rem solid #ddd;
-  border-radius: 0 .25rem .25rem 0;
-}
-
-/* Focus */
-.file input:focus ~ .file-custom {
-  box-shadow: 0 0 0 .075rem #fff, 0 0 0 .2rem #0074d9;
-}
-
-.row-flex {
-    display: flex;
-    flex-flow: row wrap;
-}
-
-.f-block {
-    padding: 10px;
-    font-weight: bold;
-    border-radius: 15px 0px 0px 15px;
-    border-right-width: 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: darkgray;
-    color: white;
-}
-
-.m-block {
-    padding: 10px;
-    background-color: white;
-}
-
-.l-block {
-    padding: 10px;
-    border-radius: 0px 15px 15px 0px;
-    border-left-width: 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: darkgray;
-}
-
-@media (max-width: 768px){
-    .f-block {
-        border-radius: 15px 15px 0px 0px;
-        border-right-width: 1px;
-        border-bottom-width: 0px;
-    }
-
-    .l-block {
-        border-radius: 0px 0px 15px 15px;
-        border-left-width: 1px;
-        border-top-width: 0px;
-    }
 }
