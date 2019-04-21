@@ -23,9 +23,9 @@ namespace Caesar_Shift.Business
 
         public static string GetTextFromDocx(Stream stream, Controller controll)
         {
-            StringBuilder wholeDocument = new StringBuilder();
-            XWPFDocument document = new XWPFDocument(stream);
-            foreach (var item in document.Paragraphs)
+            var wholeDocument = new StringBuilder();
+            var document = new XWPFDocument(stream);
+            foreach (XWPFParagraph item in document.Paragraphs)
                 wholeDocument.AppendLine(item.Text);
             return wholeDocument.ToString();
         }
@@ -37,8 +37,8 @@ namespace Caesar_Shift.Business
 
         public static byte[] GetDocFileWithText(string text)
         {
-            XWPFDocument document = new XWPFDocument();
-            foreach (var item in text.Split('\n'))
+            var document = new XWPFDocument();
+            foreach (string item in text.Split('\n'))
             {
                 var paragraph = document.CreateParagraph();
                 var run = paragraph.CreateRun();
@@ -46,7 +46,7 @@ namespace Caesar_Shift.Business
             }
 
 
-            MemoryStream stream = new MemoryStream();
+            var stream = new MemoryStream();
             document.Write(stream);
 
             return stream.ToArray();

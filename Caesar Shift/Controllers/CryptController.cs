@@ -13,7 +13,7 @@ namespace Caesar_Shift.Controllers
     {
         FileContext db = new FileContext();
 
-        public object FileService { get; private set; }
+        public object FileService { get; set; }
 
         private CryptionData GetCryptionData()
         {
@@ -43,35 +43,35 @@ namespace Caesar_Shift.Controllers
 
         public ActionResult Cryption()
         {
-            var data = GetCryptionData();
+            CryptionData data = GetCryptionData();
             if (data == CryptionData.None)
                 return RedirectToAction("Index", "Home");
 
             ViewBag.Key = data.Shift;
-            ViewBag.Text = Caesar.Shift(data.File.Text, data.Shift);;
+            ViewBag.Text = CaesarEncoder.Shift(data.File.Text, data.Shift);;
 
             return View();
         }
 
         public ActionResult Decryption()
         {
-            var data = GetCryptionData();
+            CryptionData data = GetCryptionData();
             if (data == CryptionData.None)
                 return RedirectToAction("Index", "Home");
 
             ViewBag.Key = data.Shift;
-            ViewBag.Text = Caesar.Shift(data.File.Text, -data.Shift); ;
+            ViewBag.Text = CaesarEncoder.Shift(data.File.Text, -data.Shift); ;
 
             return View();
         }
 
         public ActionResult KeySearch()
         {
-            var data = GetCryptionData();
+            CryptionData data = GetCryptionData();
             if (data == CryptionData.None)
                 return RedirectToAction("Index", "Home");
             
-            ViewBag.Keys = Caesar.GetBestKeys(data.File.Text);
+            ViewBag.Keys = CaesarEncoder.GetBestKeys(data.File.Text);
             ViewBag.Text = data.File.Text;
 
             return View();
@@ -79,24 +79,22 @@ namespace Caesar_Shift.Controllers
 
         public ActionResult Download(string shift)
         {
-            var data = GetCryptionData();
+            CryptionData data = GetCryptionData();
             if (data == CryptionData.None)
                 return RedirectToAction("Index", "Home");
-            
+
             int iShift = int.Parse(shift);
-            byte[] bytes;
             string appType;
-            string text;
+            byte[] bytes;
+            string text = CaesarEncoder.Shift(data.File.Text, iShift);
             if (data.File.Name.EndsWith(".txt"))
             {
                 appType = "text/plain";
-                text = Caesar.Shift(data.File.Text, iShift);
                 bytes = TextService.GetTxtFileWithText(text);
             }
             else
             {
                 appType = "application/msword";
-                text = Caesar.Shift(data.File.Text, iShift);
                 bytes = TextService.GetDocFileWithText(text);
             }
 
