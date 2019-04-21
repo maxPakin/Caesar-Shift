@@ -75,7 +75,7 @@ namespace Caesar_Shift.Business
             string[] words;
             foreach (var key in keys)
             {
-                shiftRussianText = Shift(russianText, key.Shift);
+                shiftRussianText = Shift(russianText, -key.Shift);
                 words = shiftRussianText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var word in words)
                 {
