@@ -1,5 +1,4 @@
 ﻿using Caesar_Shift.Business;
-using Caesar_Shift.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,77 +9,107 @@ namespace Caesar_Shift.Controllers
 {
     public class HomeController : Controller
     {
-        FileContext db = new FileContext();
-
-        private string ButtonTextToAction(string action)
-        {
-            switch (action)
-            {
-                case "Зашифровка": return "Cryption"; 
-                case "Расшифровка": return "Decryption"; 
-                case "Найти ключ": return "KeySearch";
-            }
-            return "";
-        }
-
         public ActionResult Index()
         {
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Upload(HttpPostedFileBase file, string text, string cryptionKey, string decryptionKey, string action)
-        {
-            if (file == null && text.Length < 1)
-                return RedirectToAction("Index", "Home");
-
-            action = ButtonTextToAction(action);
-            string key = action == "Cryption" ? cryptionKey : decryptionKey;
-
-
-            string fileName;
-            int id;
-            if (file != null)
-            {
-                fileName = file.FileName;
-                if (file.FileName.EndsWith(".txt"))
-                {
-                    text = TextService.GetTextFromTxt(file.InputStream);
-                }
-                else
-                    text = TextService.GetTextFromDocx(file.InputStream, this);
-                id = db.Add(file.FileName, text);
-            }
-            else
-                id = db.Add(text);
-
-            var cookie = new HttpCookie("FileID", id.ToString());
-            Response.Cookies.Add(cookie);
-
-            if (!"KeySearch".Equals(action))
-            {
-                cookie = new HttpCookie("Key", key);
-                Response.Cookies.Add(cookie);
-            }
-
-            return RedirectToAction(action, "Crypt");
-        }
-
-
-
-
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
-
             return View();
         }
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
-
             return View();
+        }
+
+        private string GetNeededText(HttpPostedFileBase file, string text)
+        {
+            if (file != null)
+            {
+                var fileName = file.FileName;
+
+                if (fileName.EndsWith(".txt"))
+                {
+                    return TextService.GetTextFromTxt(file.InputStream);
+                }
+
+                if (fileName.EndsWith(".docx"))
+                {
+                    return TextService.GetTextFromDocx(file.InputStream);
+                }
+            }
+            else if (!string.IsNullOrEmpty(text))
+            {
+                return text;
+            }
+
+            return null;
+        }
+
+        [HttpPost]
+        [MultipleButton(Name = "action", Argument = "Encryption")]
+        public ActionResult Cryption(HttpPostedFileBase file, string text, int key)
+        {
+            text = GetNeededText(file, text);
+            if (text == null) return RedirectToAction("Index");
+            string fileName = file?.FileName ?? "Untitled.txt";
+
+            ViewBag.Text = CaesarEncoder.Encryption(text, key);
+            ViewBag.FileName = fileName;
+
+            return View("Encryption");
+        }
+
+        [HttpPost]
+        [MultipleButton(Name = "action", Argument = "Decryption")]
+        public ActionResult Decryption(HttpPostedFileBase file, string text, int key)
+        {
+            text = GetNeededText(file, text);
+            if (text == null) return RedirectToAction("Index");
+            string fileName = file?.FileName ?? "Untitled.txt";
+
+            ViewBag.Text = CaesarEncoder.Decryption(text, key);
+            ViewBag.FileName = fileName;
+
+            return View("Decryption");
+        }
+
+        [HttpPost]
+        [MultipleButton(Name = "action", Argument = "KeySearch")]
+        public ActionResult KeySearch(HttpPostedFileBase file, string text)
+        {
+            text = GetNeededText(file, text);
+            if (text == null) return RedirectToAction("Index");
+            string fileName = file?.FileName ?? "Untitled.txt";
+
+            ViewBag.Keys = CaesarEncoder.GetBestKeys(text);
+            ViewBag.FileName = fileName;
+
+            return View("KeySearch");
+        }
+
+        public ActionResult Download(string text, string fileName)
+        {
+            string appType;
+            byte[] bytes;
+            if (fileName.EndsWith(".txt"))
+            {
+                appType = "text/plain";
+                bytes = TextService.GetTxtFileWithText(text);
+            }
+            else if (fileName.EndsWith(".docx"))
+            {
+                appType = "application/msword";
+                bytes = TextService.GetDocFileWithText(text);
+            }
+            else
+            {
+                return null;
+            }
+
+            return File(bytes, appType, fileName);
         }
     }
 }

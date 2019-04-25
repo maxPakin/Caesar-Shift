@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewBag.Title = "Зашифровка";
+}
+
+
+<div class="container shadow-card" style="padding: 20px 30px;">
+    <h2>Результаты зашифровки</h2><hr />
+    <h4>Текст был зашифрован с ключом <strong>@ViewBag.Key</strong></h4>
+    @using (Html.BeginForm("Download", "Home", FormMethod.Post))
+    {
+        <textarea type="text" rows="5" name="text" class="m-textarea" readonly>@ViewBag.Text</textarea>
+        <h3 class="pb-2">Вы можете скачать результат:</h3>
+        <input name="fileName" type="hidden" value="@ViewBag.FileName">
+        <button class="btn btn-success btn-lg" type="submit">Скачать</button>
+    }
+</div>
+
+

@@ -10,10 +10,6 @@
     max-width: 960px;
 }
 
-.dl-horizontal dt {
-    white-space: normal;
-}
-
 header {
   padding: 156px 0 100px;
 }
@@ -24,6 +20,17 @@ section {
 
 textarea {
     width: 100%;
+    resize: vertical;
+    margin-bottom: 0px;
+}
+textarea::-webkit-scrollbar {
+    width: 10px;
+    background-color: transparent;
+}
+
+textarea::-webkit-scrollbar-thumb {
+    border-radius: 1px;
+    background-color: #4285F4;
 }
 
 span, h1, h2, h3, h4, h5, h6, textarea, label, a{
@@ -69,7 +76,10 @@ span, h1, h2, h3, h4, h5, h6, textarea, label, a{
 .m-block {
     padding: 10px;
     background-color: white;
-    white-space: pre-wrap;
+}
+.m-textarea {
+    background: transparent;
+    border-width: 1px 0px 1px 0px;
 }
 
 .l-block {

@@ -7,116 +7,130 @@ namespace Caesar_Shift.Business
 {
     public static class CaesarEncoder
     {
-        private const bool ASCII_IS_GOOD_BOY = 'а' < 'ё' && 'ё' < 'я';
-        // false, because ASCII is not good boy
+        private const string AlphabetLower = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
+        private const string AlphabetUpper = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+        private const string FullAlphabet = AlphabetLower + AlphabetUpper;
+        private const int AlphabetLength = 33;
 
-        private const string ALPHABET_LOWER = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
-        private const string ALPHABET_UPPER = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
-        private const int ALPHABET_LENGTH = 33;
+        private static readonly string[] OneLetterWord = { "а", "б", "в", "ж", "и", "к", "о", "с", "у", "э", "я" };
+        private static readonly string[] IncorrectStartOfWords = { "ъ", "ы", "ь"};
 
-        private static readonly string[] oneLetterWord = { "а", "б", "в", "ж", "и", "к", "о", "с", "у", "э", "я" };
+        private static readonly float[] LetterFrecuency = { 0.0801f, 0.0159f, 0.0454f, 0.0170f, 0.0298f, 0.0845f, 0.0004f, 0.0094f, 0.0165f, 0.0735f, 0.0121f, 0.0349f, 0.0440f, 0.0321f, 0.0670f, 0.1097f, 0.0281f, 0.0473f, 0.0547f, 0.0626f, 0.0262f, 0.0026f, 0.0097f, 0.0048f, 0.0144f, 0.0073f, 0.0036f, 0.0004f, 0.0190f, 0.0174f, 0.0032f, 0.0064f, 0.0201f };
 
-        private static readonly float[] letterFrecuency = { 0.0801f, 0.0159f, 0.0454f, 0.0170f, 0.0298f, 0.0845f, 0.0004f, 0.0094f, 0.0165f, 0.0735f, 0.0121f, 0.0349f, 0.0440f, 0.0321f, 0.0670f, 0.1097f, 0.0281f, 0.0473f, 0.0547f, 0.0626f, 0.0262f, 0.0026f, 0.0097f, 0.0048f, 0.0144f, 0.0073f, 0.0036f, 0.0004f, 0.0190f, 0.0174f, 0.0032f, 0.0064f, 0.0201f };
-
-        private class Key
+        public class Key
         {
             public int Shift { get; set; }
             public float Deflection { get; set; }
+            public string Text { get; set; }
         }
 
-        public static int[] GetBestKeys(string text)
+        public static Key[] GetBestKeys(string text)
         {
-            text = text.ToLower();
-
-            // Подсчёт всех букв и выделение только русского текста
-            GetRussianTextWithStatistic(text, out string russianText, out int[] russianLetterCount);
+            // Подсчёт всех букв
+            int[] russianLetterCount = GetRussianLetterCount(text);
 
             // Подсчёт отклонения у ключей
             Key[] keys = GetKeys(text, russianLetterCount);
 
             // Улучшим результаты, увеличивая отклонение ключам с невозможными словами
-            GiveBigDeflectionToUnrealWordKeys(keys, russianText);
+            FindUnrealWords(keys);
 
             // Избавляемся от класса ключа, возвращая лишь массив ключей в порядке возрастания отклонения
-            return keys.OrderBy(key => key.Deflection).Select(x => x.Shift).ToArray();
+            return keys.OrderBy(key => key.Deflection).ToArray();
         }
 
-        private static void GiveBigDeflectionToUnrealWordKeys(Key[] keys, string russianText)
+        private static int[] GetRussianLetterCount(string text)
         {
-            foreach (var key in keys)
+            string lower = text.ToLower();
+            var russianLetterCount = new int[AlphabetLength];
+
+            foreach (var c in lower)
             {
-                string shiftRussianText = Shift(russianText, -key.Shift);
-                string[] words = shiftRussianText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var word in words)
+                int index;
+                if ((index = AlphabetLower.IndexOf(c)) != -1)
                 {
-                    if (word.StartsWith("ъ") || word.StartsWith("ь") || word.StartsWith("ы"))
-                        key.Deflection *= 10;
-                    if (word.Length == 1 && !oneLetterWord.Contains(word))
-                        key.Deflection *= 10;
+                    russianLetterCount[index]++;
                 }
             }
+
+            return russianLetterCount;
         }
 
         private static Key[] GetKeys(string text, int[] russianLetterCount)
         {
             // Определение отклонения от статистической частоты для каждого ключа
-            Key[] keys = new Key[ALPHABET_LENGTH];
+            Key[] keys = new Key[AlphabetLength];
             int russianLetterFullCount = russianLetterCount.Sum();
             // Цикл создания ключей
-            for (int i = 0; i < ALPHABET_LENGTH; i++)
+            for (int i = 0; i < AlphabetLength; i++)
             {
-                var key = new Key() { Shift = i, Deflection = 0 };
+                var key = new Key { Shift = i, Deflection = 0, Text = Decryption(text, i)};
                 // Цикл перебора букв
-                for (int j = 0; j < ALPHABET_LENGTH; j++)
+                for (int j = 0; j < AlphabetLength; j++)
                 {
                     // Определяем сдвинутую букву
-                    int index = (j + i) % ALPHABET_LENGTH;
+                    int index = (j + i) % AlphabetLength;
 
                     // Определение частоты буквы со сдвигом по ключу
                     float currentFrecuency = russianLetterCount[index] * 1f / russianLetterFullCount;
 
                     // Суммирование разниц статистической и текущей частоты
-                    key.Deflection += Math.Abs(currentFrecuency - letterFrecuency[j]);
+                    key.Deflection += Math.Abs(currentFrecuency - LetterFrecuency[j]);
                 }
                 keys[i] = key;
             }
 
             return keys;
         }
-        
-        private static void GetRussianTextWithStatistic(string text, out string russianText, out int[] russianLetterCount)
-        {
-            russianText = "";
-            russianLetterCount = new int[ALPHABET_LENGTH];
 
-            foreach (var c in text)
+        private static void FindUnrealWords(Key[] keys)
+        {
+            foreach (var key in keys)
             {
-                int index;
-                if ((index = ALPHABET_LOWER.IndexOf(c)) != -1)
-                {
-                    russianLetterCount[index]++;
-                    russianText += c;
-                }
-                else if (c == ' ')
-                    russianText += ' ';
+                string[] words = key.Text.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                int incorrectWordsCount = words.Count(IsUnrealWord);
+                key.Deflection *= incorrectWordsCount * 10;
             }
+        }
+
+        private static bool IsUnrealWord(string word)
+        {
+            if (IncorrectStartOfWords.Any(word.StartsWith))
+                return true;
+
+            return word.Length == 1 && IsRussian(word[0]) && !OneLetterWord.Contains(word);
+        }
+
+        private static bool IsRussian(char c)
+        {
+            return FullAlphabet.Contains(c);
+        }
+
+        public static string Encryption(string text, int key)
+        {
+            return Shift(text, key);
+        }
+
+        public static string Decryption(string text, int key)
+        {
+            return Shift(text, -key);
         }
 
         public static string Shift(string text, int shift)
         {
-            shift = shift < 0 ? ALPHABET_LENGTH + shift % ALPHABET_LENGTH : shift;
+            shift = shift < 0 ? AlphabetLength + shift % AlphabetLength : shift;
 
             string shiftText = "";
             int index;
             foreach (var c in text)
             {
-                if ((index = ALPHABET_LOWER.IndexOf(c)) != -1)
+                if ((index = AlphabetLower.IndexOf(c)) != -1)
                 {
-                    shiftText += ALPHABET_LOWER[(index + shift) % ALPHABET_LENGTH];
+                    shiftText += AlphabetLower[(index + shift) % AlphabetLength];
                 }
-                else if ((index = ALPHABET_UPPER.IndexOf(c)) != -1)
+                else if ((index = AlphabetUpper.IndexOf(c)) != -1)
                 {
-                    shiftText += ALPHABET_UPPER[(index + shift) % ALPHABET_LENGTH];
+                    shiftText += AlphabetUpper[(index + shift) % AlphabetLength];
                 }
                 else
                 {

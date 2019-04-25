@@ -11,23 +11,19 @@ namespace Caesar_Shift.Business
 {
     public static class TextService
     {
-        private static string GetTempDocxPath(Controller controll)
-        {
-            return controll.Server.MapPath("~/Business/" + DateTime.Now.ToFileTime());
-        }
-
         public static string GetTextFromTxt(Stream stream)
         {
             return new StreamReader(stream).ReadToEnd();
         }
 
-        public static string GetTextFromDocx(Stream stream, Controller controll)
+        public static string GetTextFromDocx(Stream stream)
         {
             var wholeDocument = new StringBuilder();
             var document = new XWPFDocument(stream);
             foreach (XWPFParagraph item in document.Paragraphs)
                 wholeDocument.AppendLine(item.Text);
-            return wholeDocument.ToString();
+            // Удаляем последнюю новую строку и старый формат новой строки
+            return wholeDocument.Replace("\r", "").Remove(wholeDocument.Length - 1, 1).ToString();
         }
 
         public static byte[] GetTxtFileWithText(string text)
