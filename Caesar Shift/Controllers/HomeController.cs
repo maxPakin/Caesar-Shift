@@ -58,6 +58,7 @@ namespace Caesar_Shift.Controllers
 
             ViewBag.Text = CaesarEncoder.Encryption(text, encryptKey);
             ViewBag.FileName = fileName;
+            ViewBag.Key = encryptKey;
 
             return View("Encryption");
         }
@@ -72,6 +73,7 @@ namespace Caesar_Shift.Controllers
 
             ViewBag.Text = CaesarEncoder.Decryption(text, decryptKey);
             ViewBag.FileName = fileName;
+            ViewBag.Key = decryptKey;
 
             return View("Decryption");
         }
