@@ -78,7 +78,7 @@ span, h1, h2, h3, h4, h5, h6, textarea, label, a{
     background-color: white;
 }
 .m-textarea {
-    background: transparent;
+    background: white;
     border-width: 1px 0px 1px 0px;
 }
 

@@ -50,13 +50,13 @@ namespace Caesar_Shift.Controllers
 
         [HttpPost]
         [MultipleButton(Name = "action", Argument = "Encryption")]
-        public ActionResult Cryption(HttpPostedFileBase file, string text, int key)
+        public ActionResult Cryption(HttpPostedFileBase file, string text, int encryptKey)
         {
             text = GetNeededText(file, text);
             if (text == null) return RedirectToAction("Index");
             string fileName = file?.FileName ?? "Untitled.txt";
 
-            ViewBag.Text = CaesarEncoder.Encryption(text, key);
+            ViewBag.Text = CaesarEncoder.Encryption(text, encryptKey);
             ViewBag.FileName = fileName;
 
             return View("Encryption");
@@ -64,13 +64,13 @@ namespace Caesar_Shift.Controllers
 
         [HttpPost]
         [MultipleButton(Name = "action", Argument = "Decryption")]
-        public ActionResult Decryption(HttpPostedFileBase file, string text, int key)
+        public ActionResult Decryption(HttpPostedFileBase file, string text, int decryptKey)
         {
             text = GetNeededText(file, text);
             if (text == null) return RedirectToAction("Index");
             string fileName = file?.FileName ?? "Untitled.txt";
 
-            ViewBag.Text = CaesarEncoder.Decryption(text, key);
+            ViewBag.Text = CaesarEncoder.Decryption(text, decryptKey);
             ViewBag.FileName = fileName;
 
             return View("Decryption");
