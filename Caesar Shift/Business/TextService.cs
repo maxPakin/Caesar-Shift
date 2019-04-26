@@ -13,7 +13,8 @@ namespace Caesar_Shift.Business
     {
         public static string GetTextFromTxt(Stream stream)
         {
-            return new StreamReader(stream).ReadToEnd();
+            Encoding encoding = OpenStreamAndGetEncoding(stream);
+            return new StreamReader(stream, encoding).ReadToEnd();
         }
 
         public static string GetTextFromDocx(Stream stream)
@@ -48,6 +49,71 @@ namespace Caesar_Shift.Business
             return stream.ToArray();
         }
 
+        private static Encoding OpenStreamAndGetEncoding(Stream stream)
+        {
+            var Unicode = new byte[] { 0xFF, 0xFE, 0x41 };
+            var UnicodeBIG = new byte[] { 0xFE, 0xFF, 0x00 };
+            var UTF8 = new byte[] { 0xEF, 0xBB, 0xBF }; //with BOM
 
+            var binaryReader = new BinaryReader(stream, Encoding.Default);
+            int i = (int)stream.Length;
+            byte[] bytes = binaryReader.ReadBytes(i);
+            stream.Position = 0;
+            if (IsUTF8Bytes(bytes) || bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
+            {
+                return Encoding.UTF8;
+            }
+
+            if (bytes[0] == 0xFE && bytes[1] == 0xFF && bytes[2] == 0x00)
+            {
+                return Encoding.BigEndianUnicode;
+            }
+
+            if (bytes[0] == 0xFF && bytes[1] == 0xFE && bytes[2] == 0x41)
+            {
+                return Encoding.Unicode;
+            }
+
+            return Encoding.Default;
+        }
+
+        // Some magic from StackOverflow...
+        private static bool IsUTF8Bytes(byte[] data)
+        {
+            int charByteCounter = 1;
+            byte currentByte;
+            for (int i = 0; i < data.Length; i++)
+            {
+                currentByte = data[i];
+                if (charByteCounter == 1)
+                {
+                    if (currentByte >= 0x80)
+                    {
+                        while (((currentByte <<= 1) & 0x80) != 0)
+                        {
+                            charByteCounter++;
+                        }
+
+                        if (charByteCounter == 1 || charByteCounter > 6)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    if ((currentByte & 0xC0) != 0x80)
+                    {
+                        return false;
+                    }
+                    charByteCounter--;
+                }
+            }
+            if (charByteCounter > 1)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }
