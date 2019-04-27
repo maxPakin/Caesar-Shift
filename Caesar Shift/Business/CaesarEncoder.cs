@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 
 namespace Caesar_Shift.Business
@@ -120,24 +121,24 @@ namespace Caesar_Shift.Business
         {
             shift = shift < 0 ? AlphabetLength + shift % AlphabetLength : shift;
 
-            string shiftText = "";
+            var shiftedText = new StringBuilder();
             int index;
             foreach (var c in text)
             {
                 if ((index = AlphabetLower.IndexOf(c)) != -1)
                 {
-                    shiftText += AlphabetLower[(index + shift) % AlphabetLength];
+                    shiftedText.Append(AlphabetLower[(index + shift) % AlphabetLength]);
                 }
                 else if ((index = AlphabetUpper.IndexOf(c)) != -1)
                 {
-                    shiftText += AlphabetUpper[(index + shift) % AlphabetLength];
+                    shiftedText.Append(AlphabetUpper[(index + shift) % AlphabetLength]);
                 }
                 else
                 {
-                    shiftText += c;
+                    shiftedText.Append(c);
                 }
             }
-            return shiftText;
+            return shiftedText.ToString();
         }
     }
 }

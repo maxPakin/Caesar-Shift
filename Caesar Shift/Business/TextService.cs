@@ -13,7 +13,7 @@ namespace Caesar_Shift.Business
     {
         public static string GetTextFromTxt(Stream stream)
         {
-            Encoding encoding = OpenStreamAndGetEncoding(stream);
+            Encoding encoding = GetEncoding(stream);
             return new StreamReader(stream, encoding).ReadToEnd();
         }
 
@@ -49,7 +49,7 @@ namespace Caesar_Shift.Business
             return stream.ToArray();
         }
 
-        private static Encoding OpenStreamAndGetEncoding(Stream stream)
+        private static Encoding GetEncoding(Stream stream)
         {
             var Unicode = new byte[] { 0xFF, 0xFE, 0x41 };
             var UnicodeBIG = new byte[] { 0xFE, 0xFF, 0x00 };
